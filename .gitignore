@@ -1,0 +1,40 @@
+# Ignore build output
+bin/
+obj/
+
+# Ignore NuGet packages
+*.nupkg
+packages/
+
+# Ignore Visual Studio files
+*.suo
+*.user
+*.ncrunch*
+*.vs/
+*.vssscc
+*.psess
+*.cache
+*.resharper
+*.resharper.user
+_ReSharper.*
+*.[Cc]ache
+*.dotCover
+*.dotCover.Tools
+*.dotSettings
+*.TestResults
+*.sln.docstates
+*.suo
+*.user
+*.vsp
+*.vsw
+*.vws
+
+# Ignore Mac files
+.DS_Store
+
+# Ignore ReSharper cache folders
+[Oo]bj/
+[Rr]elease/
+packages/
+[Bb]in/
+[Vv]isual[Ss]tudio[Dd]ebugger/

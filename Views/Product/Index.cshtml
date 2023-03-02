@@ -1,0 +1,65 @@
+@model IEnumerable<DT191G_projekt.Models.Product>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ArticleNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AmountInStock)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Brand)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ArticleNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AmountInStock)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Brand)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ProductId">Redigera</a> |
+                <a asp-action="Details" asp-route-id="@item.ProductId">Se detaljer</a> |
+                <a asp-action="Delete" asp-route-id="@item.ProductId">Radera</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

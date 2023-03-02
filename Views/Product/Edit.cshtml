@@ -1,0 +1,108 @@
+@model DT191G_projekt.Models.Product
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Product</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ProductId" />
+            <div class="form-group">
+                <label asp-for="ArticleNumber" class="control-label"></label>
+                <input readonly asp-for="ArticleNumber" class="form-control" />
+                <span asp-validation-for="ArticleNumber" class="text-danger"></span>
+            </div>
+            <br>
+            <div class="form-group">
+                <label asp-for="AmountInStock" class="control-label"></label>
+                <input asp-for="AmountInStock" class="form-control" />
+                <span asp-validation-for="AmountInStock" class="text-danger"></span>
+            </div>
+            <br>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <br>
+            <div class="form-group">
+                <label asp-for="ProductInfo" class="control-label"></label>
+                <input asp-for="ProductInfo" class="form-control" />
+                <span asp-validation-for="ProductInfo" class="text-danger"></span>
+            </div>
+            <br>
+            <div class="form-group">
+                <input type="hidden" asp-for="ImageName" class="form-control" />
+
+                <label asp-for="ImageFile" class="control-label"></label>
+                <input type="file" asp-for="ImageFile" class="form-control" accept="image" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+                <br>
+                <label asp-for="AltText" class="control-label"></label>
+                <input asp-for="AltText" class="form-control" />
+                <span asp-validation-for="AltText" class="text-danger"></span>
+
+            </div>
+            <br>
+            <div class="form-group">
+                <label asp-for="AltText" class="control-label"></label>
+                <input asp-for="AltText" class="form-control" />
+                <span asp-validation-for="AltText" class="text-danger"></span>
+            </div>
+            <br>
+           <div class="form-group">    
+                <label asp-for="Category" class="control-label"></label>
+                <select asp-for="Category" class="form-control">
+                    <option value="">Välj kategori</option>
+                    @foreach (var category in ViewBag.Categories)
+                    {
+                        <option value="@category.CategoryName">@category.CategoryName</option>
+                    }
+                </select>
+                <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+            <br>
+            <div class="form-group">
+                <label asp-for="Weight" class="control-label"></label>
+                <input asp-for="Weight" class="form-control" />
+                <span asp-validation-for="Weight" class="text-danger"></span>
+            </div>
+            <br>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <br>
+            <div class="form-group">    
+                <label asp-for="Brand" class="control-label"></label>
+                <select asp-for="Brand" class="form-control">
+                    <option value="">Välj märke</option>
+                    @foreach (var brand in ViewBag.Brands)
+                    {
+                        <option value="@brand.BrandName">@brand.BrandName</option>
+                    }
+                </select>
+                <span asp-validation-for="Brand" class="text-danger"></span>
+            </div>
+        <br>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<br>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

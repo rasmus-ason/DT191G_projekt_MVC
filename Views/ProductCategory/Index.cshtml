@@ -1,0 +1,36 @@
+@model IEnumerable<DT191G_projekt.Models.ProductCategory>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Produktkategorier</h1>
+
+<p>
+    <a asp-action="Create">Lägg till kategori</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryName)
+            </th>
+            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CategoryId">Redigera</a> |
+                <a asp-action="Delete" asp-route-id="@item.CategoryId">Radera</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
