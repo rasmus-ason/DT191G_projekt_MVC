@@ -37,6 +37,7 @@ namespace DT191G_projekt.Controllers
         }
 
         // GET: Product
+        [HttpGet("/Product")]
         public async Task<IActionResult> Index()
         {
               return _context.Product != null ? 
@@ -77,6 +78,7 @@ namespace DT191G_projekt.Controllers
 
 
         // GET: Product/Details/5
+        [HttpGet("details/{id}")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Product == null)
@@ -96,6 +98,7 @@ namespace DT191G_projekt.Controllers
 
         // GET: Product/Create
          // GET: Product/Create
+         [HttpGet("Product/Create")]
         public IActionResult Create()
         {
 
@@ -113,7 +116,7 @@ namespace DT191G_projekt.Controllers
         // POST: Product/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("Product/Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ProductId,ArticleNumber,AmountInStock,Title,ProductInfo,AltText,Category,Weight,Price,Brand,Created,ImageFile")] Product product)
         {
@@ -187,6 +190,7 @@ namespace DT191G_projekt.Controllers
         }
 
         // GET: Product/Edit/5
+        [HttpGet("Edit/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Product == null)
@@ -268,6 +272,7 @@ namespace DT191G_projekt.Controllers
         }
 
         // GET: Product/Delete/5
+        [HttpGet("Delete/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Product == null)

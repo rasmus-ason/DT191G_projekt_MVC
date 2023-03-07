@@ -3,19 +3,11 @@ public class Startup
 {
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddCors(options =>
-        {
-            options.AddPolicy("AllowAnyOrigin",
-                builder =>
-                {
-                    builder.AllowAnyOrigin()
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
-                });
-        });
 
-                
-        services.AddControllers();
+
+             
+        services.AddControllers();   
+        
     }
 
     
@@ -23,9 +15,6 @@ public class Startup
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
 
-       app.UseCors("AllowAnyOrigin");
-
-       
 
         // Configure routing
         app.UseEndpoints(endpoints =>
