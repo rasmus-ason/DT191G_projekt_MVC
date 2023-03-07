@@ -20,3 +20,54 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/*Home Page */
+.HomePageButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 3%;
+}
+
+.HomePageButtons a {
+  background-color: #75634d;
+  width: max(25vw, 180px);
+  margin: auto;
+  color: white;
+  text-decoration: none;
+  padding: 5px 0 5px 0;
+  box-shadow: 2px 2px 2px #7a6c5b;
+  border-radius: 5px;  
+}
+
+.HomePageButtons a:hover, .IndexProductButtons a:hover {
+  background-color: #5d5040;
+}
+
+.HomePageButtons h2 {
+  text-transform: uppercase;
+  font-size: clamp(0.9rem, 2vw, 1.3rem);
+  margin-bottom: -15px;
+  margin-top: 15px;
+}
+
+/* Index Page Products */
+.IndexProductButtons {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.IndexProductButtons a {
+  background-color: #75634d;
+  width: max(20vw, 100px);
+  color: white;
+  text-decoration: none;
+  padding: 4px 0 4px 0;
+  box-shadow: 2px 2px 2px #7a6c5b;
+  border-radius: 5px;  
+  text-align: center;
+
+}
+

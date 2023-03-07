@@ -14,10 +14,16 @@ namespace DT191G_projekt.Controllers
     public class DetailedOrderController : Controller
     {
         private readonly DetailedOrderContext _context;
+        private readonly ProductContext _productContext;
+        private readonly ILogger<DetailedOrderController> _logger;
 
-        public DetailedOrderController(DetailedOrderContext context)
+
+        public DetailedOrderController(DetailedOrderContext context, ProductContext productContext, ILogger<DetailedOrderController> logger)
         {
             _context = context;
+            _productContext = productContext;
+            _logger = logger;
+
         }
 
         // GET: DetailedOrder
@@ -56,34 +62,73 @@ namespace DT191G_projekt.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([FromBody] DetailedOrder json) 
+        public async Task<IActionResult> Create([FromBody] DetailedOrder detailedOrderbody)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var detailedOrder = new DetailedOrder 
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var detailedOrder = new DetailedOrder
                 {
-                    OrderNumber = json.OrderNumber,
+                    OrderNumber = detailedOrderbody.OrderNumber,
                     Articles = new List<Article>()
                 };
 
-                foreach (var articleJson in json.Articles)
+                foreach (var articleDto in detailedOrderbody.Articles)
                 {
-                    var article = new Article 
+                    var article = new Article
                     {
-                        ArticleNumber = articleJson.ArticleNumber,
-                        Amount = articleJson.Amount,
-                        DetailedOrderId = detailedOrder.Id
+                        ArticleNumber = articleDto.ArticleNumber,
+                        Amount = articleDto.Amount
                     };
                     detailedOrder.Articles.Add(article);
                 }
 
-                _context.Add(detailedOrder);
+                _context.DetailedOrder.Add(detailedOrder);
                 await _context.SaveChangesAsync();
-                return Ok("Order created successfully");
+
+                return Ok(detailedOrder.Id);
             }
-            return BadRequest(ModelState);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while creating the order");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the order");
+            }
         }
+
+
+        [HttpGet("getpackinglist/{ordernumber}")]
+        public async Task<ActionResult<List<Article>>> GetPackingList(int ordernumber)
+        {
+            //Get orderId from the ordernumber
+            var getOrderIdFromOrdernumber = await _context.DetailedOrder.Where(o => o.OrderNumber == ordernumber).FirstOrDefaultAsync();
+
+            if (getOrderIdFromOrdernumber == null) 
+            {
+                return NotFound();
+            }
+
+            //Extract orderId from selected row
+            var uniqueOrderId = getOrderIdFromOrdernumber.Id;
+
+            //Get all rows with selected orderId
+            var articles = await _context.Articles
+                .Where(a => a.DetailedOrderId == uniqueOrderId)
+                .ToListAsync();
+
+            // Store the product titles in the ViewBag
+            ViewBag.Ordernumber = ordernumber;
+            ViewBag.PackingList = articles;
+
+
+            return View(articles);
+        }
+
+      
+        
 
 
         // GET: DetailedOrder/Edit/5

@@ -7,25 +7,64 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DT191G_projekt.Data;
 using DT191G_projekt.Models;
+using Microsoft.Extensions.Logging;
+
 
 namespace DT191G_projekt.Controllers
 {
     public class CustomerOrderController : Controller
     {
         private readonly CustomerOrderContext _context;
+        private readonly ILogger<CustomerOrderController> _logger;
 
-        public CustomerOrderController(CustomerOrderContext context)
+        public CustomerOrderController(CustomerOrderContext context, ILogger<CustomerOrderController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
-        // GET: CustomerOrder
+        // GET: CustomerOrder - Get orders that is not packed or shipped
         public async Task<IActionResult> Index()
         {
-              return _context.CustomerOrder != null ? 
-                          View(await _context.CustomerOrder.ToListAsync()) :
-                          Problem("Entity set 'CustomerOrderContext.CustomerOrder'  is null.");
+              //Check that IsPacked & isShipped is set to false
+                var orders = await _context.CustomerOrder
+                    .Where(o => o.IsPacked == false)
+                    .Where(o => o.IsShipped == false)
+                    .ToListAsync();
+
+                //Return orders it's not null
+                return orders != null ? View(orders) :
+                Problem("Entity set 'CustomerOrderContext.CustomerOrder'  is null.");
         }
+
+        // GET: CustomerOrder/PackedOrders - Get orders that is packed but not shipped
+        public async Task<IActionResult> PackedOrders()
+        {
+            //Check that IsPacked is also set to true 
+            var orders = await _context.CustomerOrder
+                .Where(o => o.IsPacked == true)
+                .Where(o => o.IsShipped == false)
+                .ToListAsync();
+
+            //Return orders it's not null
+            return orders != null ? View(orders) :
+            Problem("Entity set 'CustomerOrderContext.CustomerOrder'  is null.");
+        }
+
+        // GET: CustomerOrder/ShippedOrders - Get orders that is packed and shipped
+        public async Task<IActionResult> ShippedOrders()
+        {
+            //Check that IsPacked and IsShipped is also set to true 
+            var orders = await _context.CustomerOrder
+                .Where(o => o.IsPacked == true)
+                .Where(o => o.IsShipped == true)
+                .ToListAsync();
+
+            //Return orders it's not null
+            return orders != null ? View(orders) :
+            Problem("Entity set 'CustomerOrderContext.CustomerOrder'  is null.");
+        }
+
 
         // GET: CustomerOrder/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -55,24 +94,64 @@ namespace DT191G_projekt.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([FromBody] CustomerOrder customerOrder)
         {
+            //The body from the post req gets deserialized of the type CustomerOrder
+            // Checks if the model is valid
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
-                if (ModelState.IsValid)
-                {
-                    _context.Add(customerOrder);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
-                return View(customerOrder);
+                // Add DetailedOrder to context
+                _context.Add(customerOrder);
+                await _context.SaveChangesAsync();
+
+                return Ok(customerOrder);
             }
             catch (Exception ex)
             {
-                return Json(new { error = ex.Message });
+                // Log the exception and return a generic error message
+                _logger.LogError(ex, "An error occurred while creating the order");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the order");
             }
         }
+
+        //Post request that change bool value on isPacked/isShipped
+        [HttpPost("changestatus/{ordernumber}")]
+        public async Task<IActionResult> ChangeStatus(int? ordernumber)
+        {
+            if (ordernumber == null || _context.CustomerOrder == null)
+            {
+                return NotFound();
+            }
+
+            var customerOrder = await _context.CustomerOrder.FirstOrDefaultAsync(o => o.OrderNumber == ordernumber);
+
+            if (customerOrder == null)
+            {
+                return NotFound();
+            }
+
+
+            if(customerOrder.IsPacked == false && customerOrder.IsShipped == false ){
+                customerOrder.IsPacked = true;
+            }
+
+            if(customerOrder.IsPacked == true && customerOrder.IsShipped == false ){
+                customerOrder.IsShipped = true;
+            }
+
+            _context.CustomerOrder.Update(customerOrder);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
+
+        
+
 
 
 

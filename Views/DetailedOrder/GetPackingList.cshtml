@@ -1,0 +1,19 @@
+@model IEnumerable<DT191G_projekt.Models.Article>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Plocka order</h1>
+<h2>Ordernummer : @ViewBag.OrderNumber</h2>
+
+
+
+@foreach(var article in ViewBag.PackingList)
+{
+    <p>Artikelnummer : @article.ArticleNumber - Antal:  @article.Amount</p>
+}
+
+<form asp-controller="CustomerOrder" asp-action="ChangeStatus" asp-route-ordernumber="@ViewBag.OrderNumber" method="post">
+    <button type="submit">Ändra order till plockad</button>
+</form>

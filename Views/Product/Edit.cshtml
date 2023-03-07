@@ -33,7 +33,7 @@
             <br>
             <div class="form-group">
                 <label asp-for="ProductInfo" class="control-label"></label>
-                <input asp-for="ProductInfo" class="form-control" />
+                <textarea asp-for="ProductInfo" class="form-control"></textarea>
                 <span asp-validation-for="ProductInfo" class="text-danger"></span>
             </div>
             <br>
@@ -93,14 +93,14 @@
             </div>
         <br>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Spara ändringar" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 <br>
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Tillbaka till produktöversikt</a>
 </div>
 
 @section Scripts {

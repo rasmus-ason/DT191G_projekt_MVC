@@ -4,11 +4,14 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Mr. Sourdoughs Produkter</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="IndexProductButtons">
+    <a asp-action="Index" asp-controller="ProductCategory">Hantera produktkategorier</a>
+    <a asp-action="Index" asp-controller="ProductBrand">Hantera märken & leverantörer</a>
+    <a asp-action="Create">Lägg till vara</a>
+</div>
+
 <table class="table">
     <thead>
         <tr>
@@ -56,7 +59,7 @@
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ProductId">Redigera</a> |
-                <a asp-action="Details" asp-route-id="@item.ProductId">Se detaljer</a> |
+                <a asp-action="Details" asp-route-id="@item.ProductId">Se alla detaljer</a> |
                 <a asp-action="Delete" asp-route-id="@item.ProductId">Radera</a>
             </td>
         </tr>

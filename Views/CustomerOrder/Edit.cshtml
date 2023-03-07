@@ -4,9 +4,8 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>Redigera Order</h1>
 
-<h4>CustomerOrder</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -15,7 +14,7 @@
             <input type="hidden" asp-for="OrderId" />
             <div class="form-group">
                 <label asp-for="OrderNumber" class="control-label"></label>
-                <input asp-for="OrderNumber" class="form-control" />
+                <input readonly asp-for="OrderNumber" class="form-control" />
                 <span asp-validation-for="OrderNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -55,7 +54,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="PurchaseDate" class="control-label"></label>
-                <input asp-for="PurchaseDate" class="form-control" />
+                <input readonly asp-for="PurchaseDate" class="form-control" />
                 <span asp-validation-for="PurchaseDate" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -68,26 +67,48 @@
                 <input asp-for="ShippingCost" class="form-control" />
                 <span asp-validation-for="ShippingCost" class="text-danger"></span>
             </div>
+
+           
+                <div class="form-group">
+                    <label asp-for="IsPacked" class="control-label"></label>
+                    <div>
+                        <label><input type="radio" asp-for="IsPacked" value="true" onchange="alert('Notera att status ändras!')"> Ja</label>
+                        <label><input type="radio" asp-for="IsPacked" value="false" onchange="alert('Notera att status ändras!')"> Nej</label>
+                    </div>
+                    <span asp-validation-for="IsPacked" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="IsShipped" class="control-label"></label>
+                    <div>
+                        <label><input type="radio" asp-for="IsShipped" value="true" onchange="alert('Notera att status ändras!')"> Ja</label>
+                        <label><input type="radio" asp-for="IsShipped" value="false" onchange="alert('Notera att status ändras!')"> Nej</label>
+                    </div>
+                    <span asp-validation-for="IsShipped" class="text-danger"></span>
+                </div>
+       
+
             <div class="form-group">
-                <label asp-for="IsPacked" class="control-label"></label>
-                <input asp-for="IsPacked" class="form-control" />
-                <span asp-validation-for="IsPacked" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IsShipped" class="control-label"></label>
-                <input asp-for="IsShipped" class="form-control" />
-                <span asp-validation-for="IsShipped" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Spara ändringar" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a href="javascript:void(0);" onclick="goBackToPreviousPage()">Tillbaka</a>
 </div>
+
+@* Add a fall back if javascript function not working in browser *@
+<script>
+function goBackToPreviousPage() {
+    try {
+        window.history.back();
+    } catch(e) {
+        window.location.href = '@Url.Action("Index", "CustomerOrder")';
+    }
+}
+</script>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -22,6 +22,7 @@ namespace DT191G_projekt.Models{
         [Display(Name = "Beskrivning av produkt")]
         public string? ProductInfo {get; set;}
 
+        [Display(Name = "Sökväg till bild")]
         public string? ImageName {get; set;}
 
         [Required]
@@ -43,6 +44,7 @@ namespace DT191G_projekt.Models{
         [Display(Name = "Märke")]
         public string? Brand {get; set;}
 
+        [Display(Name = "Skapad")]
         [DataType(DataType.Date)]
         public DateTime Created {get; set;} = DateTime.Now;
 

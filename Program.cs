@@ -35,6 +35,10 @@ builder.Services.AddDbContext<DetailedOrderContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DetailedOrderDbString"))
 );
 
+builder.Services.AddDbContext<RecipeContext>(options => 
+    options.UseSqlite(builder.Configuration.GetConnectionString("RecipeDbString"))
+);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

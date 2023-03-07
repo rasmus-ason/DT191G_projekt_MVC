@@ -5,11 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Web.Http.Cors;
 using DT191G_projekt.Data;
 using DT191G_projekt.Models;
 
 namespace DT191G_projekt.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class ProductController : Controller
     {
         private readonly ProductContext _context;

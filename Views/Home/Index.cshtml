@@ -3,8 +3,22 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Välkommen till jobbet!</h1>
+
+    <hr>
+
+    <div class="HomePageButtons">
+        <h2>Hantera produkter</h2>
+        <a asp-action="Index" asp-controller="Product" >Hantera produkter</a>
+        <a asp-action="Index" asp-controller="ProductCategory">Hantera produktkategorier</a>
+        <a asp-action="Index" asp-controller="ProductBrand">Hantera märken & leverantörer</a>
+
+        <h2>Hantera Ordrar</h2>
+        <a asp-action="Index" asp-controller="CustomerOrder">Se & plocka nya ordrar</a>
+        <a asp-action="PackedOrders" asp-controller="CustomerOrder">Skicka iväg plockade ordrar</a>
+        <a asp-action="ShippedOrders" asp-controller="CustomerOrder">Se skickade ordrar</a>
+    </div>
+    
 
   
     
