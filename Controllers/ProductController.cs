@@ -11,8 +11,8 @@ using DT191G_projekt.Models;
 
 namespace DT191G_projekt.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
+    // [ApiController]
+    // [Route("[controller]")]
     public class ProductController : Controller
     {
         private readonly ProductContext _context;
@@ -135,10 +135,10 @@ namespace DT191G_projekt.Controllers
 
                     //Store the absolute path in Image Name
                     var wwwroot = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-                    product.ImageName = wwwroot + "/wwwroot/imageupload/" + product.ImageName;
+                    product.ImageName = wwwroot + "/ProductImages/" + product.ImageName;
 
-                    //Store path to save image in wwwroot/imageuploads
-                    string path = Path.Combine(wwwRootPath + "wwwroot" + "/" + "imageupload", filename);
+                    //Store path to save image in /productimages
+                    string path = Path.Combine(wwwRootPath + "ProductImages", filename);
 
                     //Store file
                     using (var fileStream = new FileStream(path, FileMode.Create)){
