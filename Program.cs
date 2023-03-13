@@ -10,7 +10,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
@@ -37,6 +37,10 @@ builder.Services.AddDbContext<DetailedOrderContext>(options =>
 
 builder.Services.AddDbContext<RecipeContext>(options => 
     options.UseSqlite(builder.Configuration.GetConnectionString("RecipeDbString"))
+);
+
+builder.Services.AddDbContext<AboutUsContext>(options => 
+    options.UseSqlite(builder.Configuration.GetConnectionString("AboutUsDbString"))
 );
 
 

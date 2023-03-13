@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DT191G_projekt.Data;
 using DT191G_projekt.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DT191G_projekt.Controllers
 {
+    [Authorize]
     public class ProductBrandController : Controller
     {
         private readonly ProductBrandContext _context;
@@ -27,23 +29,23 @@ namespace DT191G_projekt.Controllers
                           Problem("Entity set 'ProductBrandContext.ProductBrand'  is null.");
         }
 
-        // GET: ProductBrand/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.ProductBrand == null)
-            {
-                return NotFound();
-            }
+        // // GET: ProductBrand/Details/5
+        // public async Task<IActionResult> Details(int? id)
+        // {
+        //     if (id == null || _context.ProductBrand == null)
+        //     {
+        //         return NotFound();
+        //     }
 
-            var productBrand = await _context.ProductBrand
-                .FirstOrDefaultAsync(m => m.BrandId == id);
-            if (productBrand == null)
-            {
-                return NotFound();
-            }
+        //     var productBrand = await _context.ProductBrand
+        //         .FirstOrDefaultAsync(m => m.BrandId == id);
+        //     if (productBrand == null)
+        //     {
+        //         return NotFound();
+        //     }
 
-            return View(productBrand);
-        }
+        //     return View(productBrand);
+        // }
 
         // GET: ProductBrand/Create
         public IActionResult Create()

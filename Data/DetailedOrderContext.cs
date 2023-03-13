@@ -17,8 +17,7 @@ namespace DT191G_projekt.Data
         {
             modelBuilder.Entity<Article>()
                 .HasKey(ar => new { ar.Id });
-
-                
+        
         }
     }
 }

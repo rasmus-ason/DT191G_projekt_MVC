@@ -31,6 +31,10 @@ namespace DT191G_projekt.Migrations.DetailedOrder
                     b.Property<int>("DetailedOrderId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("ProductTitle")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DetailedOrderId");

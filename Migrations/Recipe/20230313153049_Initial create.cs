@@ -5,7 +5,7 @@
 namespace DT191G_projekt.Migrations.Recipe
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initialcreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,7 +31,8 @@ namespace DT191G_projekt.Migrations.Recipe
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
-                    Quantity = table.Column<decimal>(type: "TEXT", nullable: true),
+                    Quantity = table.Column<int>(type: "INTEGER", nullable: true),
+                    Unit = table.Column<string>(type: "TEXT", nullable: true),
                     RecipeId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>

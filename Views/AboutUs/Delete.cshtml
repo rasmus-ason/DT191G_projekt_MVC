@@ -1,0 +1,33 @@
+@model DT191G_projekt.Models.AboutUs
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Radera texten</h1>
+
+<h3>Är du säker att du vill radera inlägget?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class = "col-sm-2">
+            Text
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Text)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Radera" class="btn btn-danger" /> 
+        <br><br>
+        <a asp-action="Index">Tillbaka till översikten</a>
+    </form>
+</div>

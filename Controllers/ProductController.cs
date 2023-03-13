@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Web.Http.Cors;
 using DT191G_projekt.Data;
 using DT191G_projekt.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DT191G_projekt.Controllers
 {
@@ -37,7 +37,8 @@ namespace DT191G_projekt.Controllers
         }
 
         // GET: Product
-        [HttpGet("/Product")]
+        [Authorize]
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
               return _context.Product != null ? 
@@ -60,7 +61,7 @@ namespace DT191G_projekt.Controllers
             }
         }
 
-        [HttpGet("GetProductById/{id}")]
+        [HttpGet("GetProductById/{productId}")]
         public async Task<IActionResult> GetProductById(int productId)
         {
             var product = await _context.Product.FindAsync(productId);
@@ -78,6 +79,7 @@ namespace DT191G_projekt.Controllers
 
 
         // GET: Product/Details/5
+        [Authorize]
         [HttpGet("details/{id}")]
         public async Task<IActionResult> Details(int? id)
         {
@@ -98,6 +100,7 @@ namespace DT191G_projekt.Controllers
 
         // GET: Product/Create
          // GET: Product/Create
+         [Authorize]
          [HttpGet("Product/Create")]
         public IActionResult Create()
         {
@@ -116,6 +119,7 @@ namespace DT191G_projekt.Controllers
         // POST: Product/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost("Product/Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ProductId,ArticleNumber,AmountInStock,Title,ProductInfo,AltText,Category,Weight,Price,Brand,Created,ImageFile")] Product product)
@@ -135,10 +139,10 @@ namespace DT191G_projekt.Controllers
 
                     //Store the absolute path in Image Name
                     var wwwroot = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-                    product.ImageName = wwwroot + "/ProductImages/" + product.ImageName;
+                    product.ImageName = wwwroot + "/imageupload/" + product.ImageName;
 
                     //Store path to save image in /productimages
-                    string path = Path.Combine(wwwRootPath + "ProductImages", filename);
+                    string path = Path.Combine(wwwRootPath + "wwwroot/imageupload", filename);
 
                     //Store file
                     using (var fileStream = new FileStream(path, FileMode.Create)){
@@ -190,7 +194,8 @@ namespace DT191G_projekt.Controllers
         }
 
         // GET: Product/Edit/5
-        [HttpGet("Edit/{id}")]
+        [Authorize]
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Product == null)
@@ -217,11 +222,12 @@ namespace DT191G_projekt.Controllers
         // POST: Product/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [Authorize]
+        [HttpPost("Product/Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ArticleNumber,AmountInStock,Title,ProductInfo,ImageName,AltText,Category,Weight,Price,Brand,Created,ImageFile")] Product product)
+        public async Task<IActionResult> Edit(int productId, [Bind("ProductId,ArticleNumber,AmountInStock,Title,ProductInfo,ImageName,AltText,Category,Weight,Price,Brand,Created,ImageFile")] Product product)
         {
-            if (id != product.ProductId)
+            if (productId != product.ProductId)
             {
                 var message = new { message = "Fel med inläsning av produkten id"};
                 return NotFound(message);
@@ -272,6 +278,7 @@ namespace DT191G_projekt.Controllers
         }
 
         // GET: Product/Delete/5
+        [Authorize]
         [HttpGet("Delete/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -291,15 +298,16 @@ namespace DT191G_projekt.Controllers
         }
 
         // POST: Product/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [Authorize]
+        [HttpPost("Product/Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int productId)
         {
             if (_context.Product == null)
             {
                 return Problem("Entity set 'ProductContext.Product'  is null.");
             }
-            var product = await _context.Product.FindAsync(id);
+            var product = await _context.Product.FindAsync(productId);
             if (product != null)
             {
                 _context.Product.Remove(product);

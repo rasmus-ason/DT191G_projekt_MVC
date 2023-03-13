@@ -7,6 +7,7 @@ namespace DT191G_projekt.Data
     {
         public RecipeContext(DbContextOptions<RecipeContext> options) : base(options)
         {
+            
         }
 
 

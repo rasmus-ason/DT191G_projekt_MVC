@@ -23,7 +23,7 @@ namespace DT191G_projekt.Models{
 
     [Required(ErrorMessage = "Ange telefonnummer")]
     [Display(Name = "Telefonnummer")]
-    public double Phonenumber {get; set;}
+    public string? Phonenumber {get; set;}
 
     [Required(ErrorMessage = "Ange adress")]
     [Display(Name = "Adress")]
@@ -39,22 +39,22 @@ namespace DT191G_projekt.Models{
 
     [Required]
     [Display(Name = "Datum för köp")]
-    public DateTime? PurchaseDate {get; set;}
+    public DateTime? PurchaseDate {get; set;} = DateTime.Now;
 
     [Required]
     [Display(Name = "Totalpris ex. frakt")]
-    public decimal TotalPrice {get; set;}
+    public string? TotalPrice {get; set;}
 
     [Required]
     [Display(Name = "Fraktkostnad")]
-    public decimal ShippingCost {get; set;}
+    public string? ShippingCost {get; set;}
 
-    [Required]
+   
     [Display(Name = "Är varan paketerad?")]
-    public bool? IsPacked {get; set;}
+    public bool? IsPacked {get; set;} = false;
 
-    [Required]
+    
     [Display(Name = "Är varan skickad?")]
-    public bool? IsShipped {get; set;} 
+    public bool? IsShipped {get; set;} = false;
 }
 }

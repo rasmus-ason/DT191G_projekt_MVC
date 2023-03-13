@@ -24,15 +24,19 @@ namespace DT191G_projekt.Migrations.CustomerOrder
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Adress")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("City")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Firstname")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<bool?>("IsPacked")
@@ -42,21 +46,26 @@ namespace DT191G_projekt.Migrations.CustomerOrder
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Lastname")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("OrderNumber")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("Phonenumber")
-                        .HasColumnType("REAL");
+                    b.Property<string>("Phonenumber")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("PurchaseDate")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("ShippingCost")
+                    b.Property<string>("ShippingCost")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("TotalPrice")
+                    b.Property<string>("TotalPrice")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ZipCode")

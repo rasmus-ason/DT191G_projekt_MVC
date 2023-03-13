@@ -26,11 +26,14 @@ namespace DT191G_projekt.Migrations.Recipe
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal?>("Quantity")
-                        .HasColumnType("TEXT");
+                    b.Property<int?>("Quantity")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("RecipeId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Unit")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 

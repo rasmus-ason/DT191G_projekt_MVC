@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DT191G_projekt.Data;
 using DT191G_projekt.Models;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DT191G_projekt.Controllers
 {
@@ -27,6 +28,7 @@ namespace DT191G_projekt.Controllers
         }
 
         // GET: DetailedOrder
+        [Authorize]
         public async Task<IActionResult> Index()
         {
               return _context.DetailedOrder != null ? 
@@ -35,6 +37,7 @@ namespace DT191G_projekt.Controllers
         }
 
         // GET: DetailedOrder/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.DetailedOrder == null)
@@ -53,10 +56,10 @@ namespace DT191G_projekt.Controllers
         }
 
         // GET: DetailedOrder/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+        // public IActionResult Create()
+        // {
+        //     return View();
+        // }
 
         // POST: DetailedOrder/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -82,17 +85,29 @@ namespace DT191G_projekt.Controllers
                     var article = new Article
                     {
                         ArticleNumber = articleDto.ArticleNumber,
+                        ProductTitle = articleDto.ProductTitle,
                         Amount = articleDto.Amount
                     };
                     detailedOrder.Articles.Add(article);
+
+                    //Update the stock
+                    var product = await _productContext.Product.FirstOrDefaultAsync(p => p.ArticleNumber == articleDto.ArticleNumber);
+                    if (product != null)
+                    {
+                        product.AmountInStock -= articleDto.Amount;
+                    }
+
+                    await _productContext.SaveChangesAsync();
+
                 }
+
 
                 _context.DetailedOrder.Add(detailedOrder);
                 await _context.SaveChangesAsync();
 
                 return Ok(detailedOrder.Id);
             }
-            catch (Exception ex)
+            catch (DbUpdateException ex)
             {
                 _logger.LogError(ex, "An error occurred while creating the order");
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the order");
@@ -132,6 +147,7 @@ namespace DT191G_projekt.Controllers
 
 
         // GET: DetailedOrder/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.DetailedOrder == null)
@@ -150,6 +166,7 @@ namespace DT191G_projekt.Controllers
         // POST: DetailedOrder/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,OrderNumber")] DetailedOrder detailedOrder)
@@ -183,6 +200,7 @@ namespace DT191G_projekt.Controllers
         }
 
         // GET: DetailedOrder/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.DetailedOrder == null)
@@ -201,6 +219,7 @@ namespace DT191G_projekt.Controllers
         }
 
         // POST: DetailedOrder/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

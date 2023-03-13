@@ -4,33 +4,40 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DT191G_projekt.Data;
 using DT191G_projekt.Models;
-
+using System.Net.Mail;
+using System.Net;
 
 namespace DT191G_projekt.Controllers
 {
+
     public class EmailFormController : Controller
     {
 
-        [HttpPost("sendemail")]
-        public async Task<IActionResult> SendEmail([FromBody] EmailForm message)
+    [HttpPost]
+    public ActionResult SendEmail([FromBody] EmailForm emailForm)
+    {
+        // Create a new MailMessage object
+        var message = new MailMessage
         {
-            var email = new MimeMessage();
-            email.From.Add(MailboxAddress.Parse("andersson.rasmus@hotmail.se"));
-            email.To.Add(MailboxAddress.Parse(message.SenderEmail));
-            email.Subject = message.SenderMessage;
+            From = new MailAddress(emailForm.SenderEmail),
+            Subject = "New Message from " + emailForm.SenderName,
+            Body = emailForm.SenderMessage
+        };
 
-            var bodyBuilder = new BodyBuilder();
-            bodyBuilder.HtmlBody = message.SenderMessage;
-            email.Body = bodyBuilder.ToMessageBody();
+        // Set the destination email address
+        message.To.Add("mrsourdoughapp@outlook.com");
 
-            using var smtpClient = new SmtpClient();
-            await smtpClient.ConnectAsync("smtp.gmail.com", 587, false);
-            await smtpClient.AuthenticateAsync("sender@example.com", "password");
-            await smtpClient.SendAsync(email);
-            await smtpClient.DisconnectAsync(true);
-
-            return Ok();
+        // Create a new SmtpClient object and send the message
+        using (var smtp = new System.Net.Mail.SmtpClient("smtp.office365.com", 587))
+        {
+            smtp.Credentials = new NetworkCredential("mrsourdoughapp@outlook.com", "poiuy123");
+            smtp.EnableSsl = true;
+            smtp.Send(message);
         }
+
+        // Return a success status code to the front-end app
+        return Ok(HttpStatusCode.OK);
+    }
 
     }
 

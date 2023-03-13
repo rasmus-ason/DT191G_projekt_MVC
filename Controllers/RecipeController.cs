@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DT191G_projekt.Data;
 using DT191G_projekt.Models;
+using Microsoft.Data.Sqlite;
 
 namespace DT191G_projekt.Controllers
 {
@@ -27,23 +28,41 @@ namespace DT191G_projekt.Controllers
                           Problem("Entity set 'RecipeContext.Recipe'  is null.");
         }
 
+        [HttpGet("getallrecepies")]
+        public async Task<IActionResult> GetAllRecipes()
+        {
+            //Join tables and return as json object
+            var recipes = await _context.Recipe.Include(r => r.Ingredients).ToListAsync();
+            return Json(recipes);
+        }
+
+
         // GET: Recipe/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Recipe == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
+            //Join ingredient and recipe tables
             var recipe = await _context.Recipe
+                .Include(r => r.Ingredients)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (recipe == null)
             {
                 return NotFound();
             }
 
+            // Store recipe and ingredient in ViewBag
+            ViewBag.RecipeTitle = recipe.Title;
+            ViewBag.RecipeDescription = recipe.Description;
+            ViewBag.Ingredients = recipe.Ingredients;
+
             return View(recipe);
         }
+       
 
         // GET: Recipe/Create
         public IActionResult Create()
@@ -56,10 +75,15 @@ namespace DT191G_projekt.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Name,Quantity")] Recipe recipe)
+        public async Task<IActionResult> Create([Bind("Title,Description,Ingredients")] Recipe recipe)
         {
             if (ModelState.IsValid)
             {
+                // Remove ingredients with null values - isNull on string values and has value on integer
+                recipe.Ingredients = recipe.Ingredients.Where(i => !string.IsNullOrWhiteSpace(i.Name) &&
+                                                                    !string.IsNullOrWhiteSpace(i.Unit) &&
+                                                                    i.Quantity.HasValue).ToList();
+                //Add to db and save
                 _context.Add(recipe);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -68,40 +92,68 @@ namespace DT191G_projekt.Controllers
         }
 
         // GET: Recipe/Edit/5
+        // GET: Recipe/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Recipe == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var recipe = await _context.Recipe.FindAsync(id);
+            //Join tables where id is id
+            var recipe = await _context.Recipe
+                .Where(r => r.Id == id)
+                .Include(r => r.Ingredients)
+                .FirstOrDefaultAsync();
+
             if (recipe == null)
             {
                 return NotFound();
             }
+
             return View(recipe);
         }
 
+
+
         // POST: Recipe/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // Send id and recipe model as prop, and ingredient as list to be able to loop through the list
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description")] Recipe recipe)
+        public async Task<IActionResult> Edit(int id, Recipe recipe, List<Ingredient> ingredients)
         {
             if (id != recipe.Id)
             {
                 return NotFound();
             }
 
+            //Check the form data
             if (ModelState.IsValid)
             {
                 try
                 {
+                    //Update the recipe table
                     _context.Update(recipe);
+
+                    //Look through the ingredients, find id of ingredients using the hidden id from the form, update if not null
+                    foreach (var ingredient in ingredients)
+                    {
+                        var existingIngredient = await _context.Ingredient.FindAsync(ingredient.Id);
+                        if (existingIngredient != null)
+                        {
+                            existingIngredient.Name = ingredient.Name;
+                            existingIngredient.Quantity = ingredient.Quantity;
+                            existingIngredient.Unit = ingredient.Unit;
+                            //Use entity.modified to update in the db
+                            _context.Entry(existingIngredient).State = EntityState.Modified;
+                        }
+                    }
+
                     await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
                 }
+                //Catch errors
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!RecipeExists(recipe.Id))
@@ -113,10 +165,11 @@ namespace DT191G_projekt.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
-            return View(recipe);
+
+            return View();
         }
+
 
         // GET: Recipe/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -141,23 +194,37 @@ namespace DT191G_projekt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Recipe == null)
-            {
-                return Problem("Entity set 'RecipeContext.Recipe'  is null.");
-            }
             var recipe = await _context.Recipe.FindAsync(id);
-            if (recipe != null)
+            if (recipe == null)
             {
-                _context.Recipe.Remove(recipe);
+                return NotFound();
             }
-            
+
+            // Find ingridients
+            var ingredients = await _context.Entry(recipe)
+                .Collection(r => r.Ingredients)
+                .Query()
+                .ToListAsync();
+
+            // Remove ingredients
+            _context.Ingredient.RemoveRange(ingredients);
+
+            // Remove recipe
+            _context.Recipe.Remove(recipe);
+
+            // Save changes
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
-        private bool RecipeExists(int id)
-        {
-          return (_context.Recipe?.Any(e => e.Id == id)).GetValueOrDefault();
+
+
+
+
+                private bool RecipeExists(int id)
+                {
+                return (_context.Recipe?.Any(e => e.Id == id)).GetValueOrDefault();
+                }
+            }
         }
-    }
-}

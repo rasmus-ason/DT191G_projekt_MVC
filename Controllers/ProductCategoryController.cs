@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DT191G_projekt.Data;
 using DT191G_projekt.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DT191G_projekt.Controllers
 {
+    [Authorize]
     public class ProductCategoryController : Controller
     {
         private readonly ProductCategoryContext _context;
@@ -28,6 +30,21 @@ namespace DT191G_projekt.Controllers
                           View(await _context.ProductCategory.ToListAsync()) :
                           Problem("Entity set 'ProductCategoryContext.ProductCategory'  is null.");
         }
+
+        // [HttpGet("GetAllCategories")]
+        // public async Task<IActionResult> GetAllCategories()
+        // {
+        //     var productCategories = await _context.ProductCategory.ToListAsync();
+
+        //     if (productCategories != null)
+        //     {
+        //         return Json(productCategories);
+        //     }
+        //     else
+        //     {
+        //         return Problem("Entity set 'ProductCategoryContext.ProductCategory' is null.");
+        //     }
+        // }
 
         // // GET: ProductCategory/Details/5
         // public async Task<IActionResult> Details(int? id)

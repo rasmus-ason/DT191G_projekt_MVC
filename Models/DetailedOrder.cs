@@ -19,6 +19,8 @@ namespace DT191G_projekt.Models{
             [Required]
             public int ArticleNumber { get; set; }
             [Required]
+            public string? ProductTitle { get; set; }
+            [Required]
             public int Amount { get; set; }
 
             // Foreign key property

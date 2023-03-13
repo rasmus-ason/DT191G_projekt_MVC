@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DT191G_projekt.Data;
 using DT191G_projekt.Models;
 using Microsoft.Extensions.Logging;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace DT191G_projekt.Controllers
 {
@@ -24,6 +24,7 @@ namespace DT191G_projekt.Controllers
         }
 
         // GET: CustomerOrder - Get orders that is not packed or shipped
+        [Authorize]
         public async Task<IActionResult> Index()
         {
               //Check that IsPacked & isShipped is set to false
@@ -38,6 +39,7 @@ namespace DT191G_projekt.Controllers
         }
 
         // GET: CustomerOrder/PackedOrders - Get orders that is packed but not shipped
+        [Authorize]
         public async Task<IActionResult> PackedOrders()
         {
             //Check that IsPacked is also set to true 
@@ -52,6 +54,7 @@ namespace DT191G_projekt.Controllers
         }
 
         // GET: CustomerOrder/ShippedOrders - Get orders that is packed and shipped
+        [Authorize]
         public async Task<IActionResult> ShippedOrders()
         {
             //Check that IsPacked and IsShipped is also set to true 
@@ -67,6 +70,7 @@ namespace DT191G_projekt.Controllers
 
 
         // GET: CustomerOrder/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.CustomerOrder == null)
@@ -85,10 +89,10 @@ namespace DT191G_projekt.Controllers
         }
 
          // GET: /CustomerOrder/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+        // public IActionResult Create()
+        // {
+        //     return View();
+        // }
 
         // POST: CustomerOrder/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -102,6 +106,33 @@ namespace DT191G_projekt.Controllers
             {
                 return BadRequest(ModelState);
             }
+
+            //Create and add a article number
+            Random rnd = new Random();
+            int ordernumber;
+            bool ordernumberExists;
+
+            //Run code again if the the created ordernumber is not unique
+            do
+            {
+                // Generate a new random 6-digit number
+                ordernumber = rnd.Next(100000, 999999);
+
+                // 
+                var o = _context.CustomerOrder.FirstOrDefault(p => p.OrderNumber == ordernumber);
+                // If 
+                if (o == null)
+                {
+                    ordernumberExists = false;
+                }
+                else
+                {
+                    ordernumberExists = true;
+                }
+            } while (ordernumberExists);
+
+                // Set the article number in the product object
+                customerOrder.OrderNumber = ordernumber;
 
             try
             {
@@ -120,6 +151,7 @@ namespace DT191G_projekt.Controllers
         }
 
         //Post request that change bool value on isPacked/isShipped
+        [Authorize]
         [HttpPost("changestatus/{ordernumber}")]
         public async Task<IActionResult> ChangeStatus(int? ordernumber)
         {
@@ -128,6 +160,7 @@ namespace DT191G_projekt.Controllers
                 return NotFound();
             }
 
+            //Find order
             var customerOrder = await _context.CustomerOrder.FirstOrDefaultAsync(o => o.OrderNumber == ordernumber);
 
             if (customerOrder == null)
@@ -135,28 +168,26 @@ namespace DT191G_projekt.Controllers
                 return NotFound();
             }
 
-
-            if(customerOrder.IsPacked == false && customerOrder.IsShipped == false ){
-                customerOrder.IsPacked = true;
-            }
-
+            //Change values on packed orders to shipped
             if(customerOrder.IsPacked == true && customerOrder.IsShipped == false ){
                 customerOrder.IsShipped = true;
             }
 
+            //Change values on new orders to packed
+            if(customerOrder.IsPacked == false && customerOrder.IsShipped == false ){
+                customerOrder.IsPacked = true;
+            }
+
+            //Update changes
             _context.CustomerOrder.Update(customerOrder);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }
 
-        
-
-
-
-
 
         // GET: CustomerOrder/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.CustomerOrder == null)
@@ -175,6 +206,7 @@ namespace DT191G_projekt.Controllers
         // POST: CustomerOrder/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("OrderId,OrderNumber,Firstname,Lastname,Email,Phonenumber,Adress,ZipCode,City,PurchaseDate,TotalPrice,ShippingCost,IsPacked,IsShipped")] CustomerOrder customerOrder)
@@ -208,6 +240,7 @@ namespace DT191G_projekt.Controllers
         }
 
         // GET: CustomerOrder/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.CustomerOrder == null)
@@ -226,6 +259,7 @@ namespace DT191G_projekt.Controllers
         }
 
         // POST: CustomerOrder/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
