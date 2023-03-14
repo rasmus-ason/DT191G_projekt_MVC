@@ -21,6 +21,11 @@ body {
   margin-bottom: 60px;
 }
 
+label {
+  font-weight: 700;
+  margin-top: 15px;
+}
+
 /*Home Page */
 .HomePageButtons {
   display: flex;
@@ -104,3 +109,29 @@ body {
   cursor: pointer;
 }
 
+/*Start kit */
+.startkitColorinfo {
+  width: 20vw;
+  text-align: center;
+  padding: 5px 0 5px 0;
+  margin-bottom: 5px;
+  border-radius: 10px;
+}
+
+.startkitFormButtons {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  
+}
+
+.startkitFormButtons [type="submit"]{
+  border-style: none;
+  background-color: white;
+  border: 1px solid #056022;
+}
+
+.startkitFormButtons [type="submit"]:hover{
+  background-color: #056022;
+  color: white;
+}

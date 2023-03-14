@@ -136,7 +136,7 @@ namespace DT191G_projekt.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Text")] AboutUs aboutUs)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Text,ImageName,ImageFile,AltText")] AboutUs aboutUs)
         {
             if (id != aboutUs.Id)
             {
@@ -145,6 +145,35 @@ namespace DT191G_projekt.Controllers
 
             if (ModelState.IsValid)
             {
+
+                //Check if image was uploaded
+                if(aboutUs.ImageFile != null) {
+
+                    //Save images to the image folder
+                    string filename = Path.GetFileNameWithoutExtension(aboutUs.ImageFile.FileName);
+                    string extention = Path.GetExtension(aboutUs.ImageFile.FileName);
+
+                    //Remove blank spaces
+                    aboutUs.ImageName = filename = filename.Replace(" ", String.Empty) + extention;
+
+                    //Store the absolute path in Image Name
+                    var wwwroot = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
+                    aboutUs.ImageName = wwwroot + "/imageupload/" + aboutUs.ImageName;
+
+                    //Store path to save image in /productimages
+                    string path = Path.Combine(wwwRootPath + "wwwroot/imageupload", filename);
+
+                    //Store file
+                    using (var fileStream = new FileStream(path, FileMode.Create)){
+                        await aboutUs.ImageFile.CopyToAsync(fileStream);
+                    }
+
+                   
+
+                }else {
+                    aboutUs.ImageName = null;
+                }
+
                 try
                 {
                     _context.Update(aboutUs);

@@ -48,6 +48,9 @@ namespace DT191G_projekt.Models{
         [DataType(DataType.Date)]
         public DateTime Created {get; set;} = DateTime.Now;
 
+        [Display(Name = "Ska produkten vara en del i startkittet?")]
+        public bool? IsInStartkit {get; set;} = false;
+
         //Genereras i gränssnittet men inte i databasen
         [Display(Name = "Välj bild")]
         [NotMapped]

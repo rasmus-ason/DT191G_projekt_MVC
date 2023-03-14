@@ -46,10 +46,56 @@ namespace DT191G_projekt.Controllers
                           Problem("Entity set 'ProductContext.Product'  is null.");
         }
 
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> StartKit()
+        {
+              return _context.Product != null ? 
+                          View(await _context.Product.ToListAsync()) :
+                          Problem("Entity set 'ProductContext.Product'  is null.");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateIsInStartkit(int id)
+        {
+            var product = await _context.Product.FindAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            //Toggle between true and false
+            product.IsInStartkit = !product.IsInStartkit;
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("StartKit", "Product");
+        }
+
+        
+
         [HttpGet("GetAllProducts")]
         public async Task<IActionResult> GetAllProducts()
         {
             var products = await _context.Product.ToListAsync();
+
+            if (products != null)
+            {
+                return Json(products);
+            }
+            else
+            {
+                return Problem("Entity set 'ProductContext.Product' is null.");
+            }
+        }
+
+        [HttpGet("GetLatestProducts")]
+        public async Task<IActionResult> GetLatestProducts()
+        {
+            var products = await _context.Product
+                .OrderByDescending(p => p.Created)
+                .Take(6)
+                .ToListAsync();
 
             if (products != null)
             {
@@ -73,6 +119,21 @@ namespace DT191G_projekt.Controllers
             else
             {
                 return NotFound();
+            }
+        }
+
+        [HttpGet("GetStartKitProducts")]
+        public async Task<IActionResult> GetStartKitProducts()
+        {
+            var startkitProducts = await _context.Product.Where(p => p.IsInStartkit == true).ToListAsync();
+
+            if (startkitProducts != null)
+            {
+                return Json(startkitProducts);
+            }
+            else
+            {
+                return Problem("Entity set 'ProductContext.Product' is null.");
             }
         }
 

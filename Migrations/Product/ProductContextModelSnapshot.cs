@@ -47,6 +47,9 @@ namespace DT191G_projekt.Migrations.Product
                     b.Property<string>("ImageName")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool?>("IsInStartkit")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Price")
                         .IsRequired()
                         .HasColumnType("TEXT");

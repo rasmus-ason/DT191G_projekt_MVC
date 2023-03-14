@@ -4,23 +4,34 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Lägg till recept</h1>
 
-<h4>Recipe</h4>
 <hr />
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
             </div>
+            <br>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
                 <textarea asp-for="Description" class="form-control"></textarea>
             </div>
+            <br>
+            <div class="form-group">
+                <label asp-for="ImageFile" class="control-label"></label>
+                <input type="file" asp-for="ImageFile" class="form-control" accept="image" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+                <br>
+                <label asp-for="AltText" class="control-label"></label>
+                <input asp-for="AltText" class="form-control" />
+                <span asp-validation-for="AltText" class="text-danger"></span>
+            </div>
+            <br>
             <div class="form-group" id="ingredient-list">
                 <label class="control-label">Ingredienser:</label>
                 <table class="table table-bordered">
@@ -51,13 +62,13 @@
                 </table>
             </div>
 
-            <button type="submit" class="btn btn-primary">Spara</button>
+            <button type="submit" class="btn btn-primary">Lägg till recept</button>
         </form>
    </div>
 </div>
-
+<br>
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Tillbaka till översikten</a>
 </div>
 
 @section Scripts {

@@ -14,10 +14,13 @@ namespace DT191G_projekt.Controllers
     public class RecipeController : Controller
     {
         private readonly RecipeContext _context;
+        private readonly IWebHostEnvironment? _hostEnvironment;
+        private string? wwwRootPath;
 
-        public RecipeController(RecipeContext context)
+        public RecipeController(RecipeContext context, IWebHostEnvironment? hostEnvironment)
         {
             _context = context;
+             wwwRootPath = _hostEnvironment?.WebRootPath;
         }
 
         // GET: Recipe
@@ -75,7 +78,7 @@ namespace DT191G_projekt.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Description,Ingredients")] Recipe recipe)
+        public async Task<IActionResult> Create([Bind("Title,Description,Ingredients,ImageFile,AltText")] Recipe recipe)
         {
             if (ModelState.IsValid)
             {
@@ -83,6 +86,34 @@ namespace DT191G_projekt.Controllers
                 recipe.Ingredients = recipe.Ingredients.Where(i => !string.IsNullOrWhiteSpace(i.Name) &&
                                                                     !string.IsNullOrWhiteSpace(i.Unit) &&
                                                                     i.Quantity.HasValue).ToList();
+
+                //Check if image was uploaded
+                if(recipe.ImageFile != null) {
+
+                    //Save images to the image folder
+                    string filename = Path.GetFileNameWithoutExtension(recipe.ImageFile.FileName);
+                    string extention = Path.GetExtension(recipe.ImageFile.FileName);
+
+                    //Remove blank spaces
+                    recipe.ImageName = filename = filename.Replace(" ", String.Empty) + extention;
+
+                    //Store the absolute path in Image Name
+                    var wwwroot = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
+                    recipe.ImageName = wwwroot + "/imageupload/" + recipe.ImageName;
+
+                    //Store path to save image in /productimages
+                    string path = Path.Combine(wwwRootPath + "wwwroot/imageupload", filename);
+
+                    //Store file
+                    using (var fileStream = new FileStream(path, FileMode.Create)){
+                        await recipe.ImageFile.CopyToAsync(fileStream);
+                    }
+
+                   
+
+                }else {
+                    recipe.ImageName = null;
+                }                                                    
                 //Add to db and save
                 _context.Add(recipe);
                 await _context.SaveChangesAsync();
