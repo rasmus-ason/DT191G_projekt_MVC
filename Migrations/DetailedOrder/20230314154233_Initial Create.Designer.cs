@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DT191G_projekt.Migrations.DetailedOrder
 {
     [DbContext(typeof(DetailedOrderContext))]
-    [Migration("20230301193435_InitialCreate")]
+    [Migration("20230314154233_Initial Create")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -33,6 +33,10 @@ namespace DT191G_projekt.Migrations.DetailedOrder
 
                     b.Property<int>("DetailedOrderId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("ProductTitle")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 

@@ -20,7 +20,6 @@ namespace DT191G_projekt.Controllers
 
         private readonly ProductBrandContext _brandContext;
         private readonly IWebHostEnvironment? _hostEnvironment;
-
         private string? wwwRootPath;
 
         public ProductController(
@@ -62,7 +61,8 @@ namespace DT191G_projekt.Controllers
             var product = await _context.Product.FindAsync(id);
             if (product == null)
             {
-                return NotFound();
+                var message = new { error = "Product not exist" };
+                return NotFound(new JsonResult(message));
             }
 
             //Toggle between true and false
@@ -146,23 +146,24 @@ namespace DT191G_projekt.Controllers
         {
             if (id == null || _context.Product == null)
             {
-                return NotFound();
+                var message = new { error = "Id/Context did not exist" };
+                return NotFound(new JsonResult(message));
             }
 
             var product = await _context.Product
                 .FirstOrDefaultAsync(m => m.ProductId == id);
             if (product == null)
             {
-                return NotFound();
+                var message = new { error = "Product not found" };
+                return NotFound(new JsonResult(message));
             }
 
             return View(product);
         }
 
         // GET: Product/Create
-         // GET: Product/Create
-         [Authorize]
-         [HttpGet("Product/Create")]
+        [Authorize]
+        [HttpGet("Product/Create")]
         public IActionResult Create()
         {
 
@@ -178,8 +179,6 @@ namespace DT191G_projekt.Controllers
         }
 
         // POST: Product/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize]
         [HttpPost("Product/Create")]
         [ValidateAntiForgeryToken]
@@ -209,8 +208,6 @@ namespace DT191G_projekt.Controllers
                     using (var fileStream = new FileStream(path, FileMode.Create)){
                         await product.ImageFile.CopyToAsync(fileStream);
                     }
-
-                   
 
                 }else {
                     product.ImageName = null;
@@ -251,7 +248,7 @@ namespace DT191G_projekt.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(product);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Product/Edit/5
@@ -261,7 +258,8 @@ namespace DT191G_projekt.Controllers
         {
             if (id == null || _context.Product == null)
             {
-                return NotFound();
+                var message = new { error = "Id/Context did not exist" };
+                return NotFound(new JsonResult(message));
             }
 
             //Get product Categories
@@ -275,14 +273,13 @@ namespace DT191G_projekt.Controllers
             var product = await _context.Product.FindAsync(id);
             if (product == null)
             {
-                return NotFound();
+                var message = new { error = "Product not found" };
+                return NotFound(new JsonResult(message));
             }
             return View(product);
         }
 
         // POST: Product/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize]
         [HttpPost("Product/Edit")]
         [ValidateAntiForgeryToken]
@@ -290,7 +287,7 @@ namespace DT191G_projekt.Controllers
         {
             if (productId != product.ProductId)
             {
-                var message = new { message = "Fel med inläsning av produkten id"};
+                var message = new { message = "Id not match"};
                 return NotFound(message);
             }
 
@@ -326,7 +323,8 @@ namespace DT191G_projekt.Controllers
                 {
                     if (!ProductExists(product.ProductId))
                     {
-                        return NotFound();
+                        var message = new { error = "Product did not exist" };
+                        return NotFound(new JsonResult(message));
                     }
                     else
                     {
@@ -345,14 +343,16 @@ namespace DT191G_projekt.Controllers
         {
             if (id == null || _context.Product == null)
             {
-                return NotFound();
+                var message = new { error = "Id/Context did not exist" };
+                return NotFound(new JsonResult(message));
             }
 
             var product = await _context.Product
                 .FirstOrDefaultAsync(m => m.ProductId == id);
             if (product == null)
             {
-                return NotFound();
+                var message = new { error = "Product not found" };
+                return NotFound(new JsonResult(message));
             }
 
             return View(product);

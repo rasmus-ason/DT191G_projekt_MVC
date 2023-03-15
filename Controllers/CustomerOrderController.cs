@@ -15,11 +15,16 @@ namespace DT191G_projekt.Controllers
     public class CustomerOrderController : Controller
     {
         private readonly CustomerOrderContext _context;
+        private readonly DetailedOrderContext _detailedContext;
         private readonly ILogger<CustomerOrderController> _logger;
 
-        public CustomerOrderController(CustomerOrderContext context, ILogger<CustomerOrderController> logger)
+        public CustomerOrderController(
+            CustomerOrderContext context, 
+            DetailedOrderContext detailedContext,
+            ILogger<CustomerOrderController> logger)
         {
             _context = context;
+            _detailedContext = detailedContext;
             _logger = logger;
         }
 
@@ -75,28 +80,22 @@ namespace DT191G_projekt.Controllers
         {
             if (id == null || _context.CustomerOrder == null)
             {
-                return NotFound();
+                var message = new { error = "Customer order id or context was not found" };
+                return NotFound(new JsonResult(message));
             }
 
             var customerOrder = await _context.CustomerOrder
                 .FirstOrDefaultAsync(m => m.OrderId == id);
             if (customerOrder == null)
             {
-                return NotFound();
+                var message = new { error = "Customer order not found" };
+                return NotFound(new JsonResult(message));
             }
 
             return View(customerOrder);
         }
 
-         // GET: /CustomerOrder/Create
-        // public IActionResult Create()
-        // {
-        //     return View();
-        // }
-
         // POST: CustomerOrder/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CustomerOrder customerOrder)
         {
@@ -118,9 +117,9 @@ namespace DT191G_projekt.Controllers
                 // Generate a new random 6-digit number
                 ordernumber = rnd.Next(100000, 999999);
 
-                // 
+                //Check if ordernumber exist
                 var o = _context.CustomerOrder.FirstOrDefault(p => p.OrderNumber == ordernumber);
-                // If 
+        
                 if (o == null)
                 {
                     ordernumberExists = false;
@@ -131,7 +130,7 @@ namespace DT191G_projekt.Controllers
                 }
             } while (ordernumberExists);
 
-                // Set the article number in the product object
+                // Set order number
                 customerOrder.OrderNumber = ordernumber;
 
             try
@@ -157,7 +156,8 @@ namespace DT191G_projekt.Controllers
         {
             if (ordernumber == null || _context.CustomerOrder == null)
             {
-                return NotFound();
+                var message = new { error = "Customer order id or context not found" };
+                return NotFound(new JsonResult(message));
             }
 
             //Find order
@@ -165,7 +165,8 @@ namespace DT191G_projekt.Controllers
 
             if (customerOrder == null)
             {
-                return NotFound();
+                var message = new { error = "Customer order not found" };
+                return NotFound(new JsonResult(message));
             }
 
             //Change values on packed orders to shipped
@@ -192,13 +193,15 @@ namespace DT191G_projekt.Controllers
         {
             if (id == null || _context.CustomerOrder == null)
             {
-                return NotFound();
+                var message = new { error = "Customer order id or context for editing not found" };
+                return NotFound(new JsonResult(message));
             }
 
             var customerOrder = await _context.CustomerOrder.FindAsync(id);
             if (customerOrder == null)
             {
-                return NotFound();
+                var message = new { error = "Customer order not found" };
+                return NotFound(new JsonResult(message));
             }
             return View(customerOrder);
         }
@@ -213,7 +216,8 @@ namespace DT191G_projekt.Controllers
         {
             if (id != customerOrder.OrderId)
             {
-                return NotFound();
+                var message = new { error = "Customer ordder id not found" };
+                return NotFound(new JsonResult(message));
             }
 
             if (ModelState.IsValid)
@@ -245,7 +249,8 @@ namespace DT191G_projekt.Controllers
         {
             if (id == null || _context.CustomerOrder == null)
             {
-                return NotFound();
+                var message = new { error = "Customer ordder id or context not found" };
+                return NotFound(new JsonResult(message));
             }
 
             var customerOrder = await _context.CustomerOrder
@@ -268,13 +273,31 @@ namespace DT191G_projekt.Controllers
             {
                 return Problem("Entity set 'CustomerOrderContext.CustomerOrder'  is null.");
             }
+
+            //Find customer
             var customerOrder = await _context.CustomerOrder.FindAsync(id);
+            //Extract the order number
+            var ordernumber = customerOrder.OrderNumber;
+
+            //Check that ordernumber is not 0
+            if(ordernumber != 0) {
+                // Find detailedOrder
+                var detailedOrder = _detailedContext.DetailedOrder
+                .Where(d => d.OrderNumber == ordernumber);
+                //Remove 
+                if(detailedOrder.Any()) {
+                    _detailedContext.DetailedOrder.RemoveRange(detailedOrder);
+                }      
+            }
+
+            //rRemove cusotomer if not null
             if (customerOrder != null)
             {
                 _context.CustomerOrder.Remove(customerOrder);
             }
             
             await _context.SaveChangesAsync();
+            await _detailedContext.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

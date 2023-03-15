@@ -29,24 +29,6 @@ namespace DT191G_projekt.Controllers
                           Problem("Entity set 'ProductBrandContext.ProductBrand'  is null.");
         }
 
-        // // GET: ProductBrand/Details/5
-        // public async Task<IActionResult> Details(int? id)
-        // {
-        //     if (id == null || _context.ProductBrand == null)
-        //     {
-        //         return NotFound();
-        //     }
-
-        //     var productBrand = await _context.ProductBrand
-        //         .FirstOrDefaultAsync(m => m.BrandId == id);
-        //     if (productBrand == null)
-        //     {
-        //         return NotFound();
-        //     }
-
-        //     return View(productBrand);
-        // }
-
         // GET: ProductBrand/Create
         public IActionResult Create()
         {
@@ -74,27 +56,28 @@ namespace DT191G_projekt.Controllers
         {
             if (id == null || _context.ProductBrand == null)
             {
-                return NotFound();
+                var message = new { error = "Id/Context did not exist" };
+                return NotFound(new JsonResult(message));
             }
 
             var productBrand = await _context.ProductBrand.FindAsync(id);
             if (productBrand == null)
             {
-                return NotFound();
+                var message = new { error = "Product brand not found" };
+                return NotFound(new JsonResult(message));
             }
             return View(productBrand);
         }
 
         // POST: ProductBrand/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("BrandId,BrandName")] ProductBrand productBrand)
         {
             if (id != productBrand.BrandId)
             {
-                return NotFound();
+                var message = new { error = "Id not match" };
+                return NotFound(new JsonResult(message));
             }
 
             if (ModelState.IsValid)
@@ -108,7 +91,8 @@ namespace DT191G_projekt.Controllers
                 {
                     if (!ProductBrandExists(productBrand.BrandId))
                     {
-                        return NotFound();
+                        var message = new { error = "Id did not exist" };
+                        return NotFound(new JsonResult(message));
                     }
                     else
                     {
@@ -125,14 +109,16 @@ namespace DT191G_projekt.Controllers
         {
             if (id == null || _context.ProductBrand == null)
             {
-                return NotFound();
+                var message = new { error = "Id/Context did not exist" };
+                return NotFound(new JsonResult(message));
             }
 
             var productBrand = await _context.ProductBrand
                 .FirstOrDefaultAsync(m => m.BrandId == id);
             if (productBrand == null)
             {
-                return NotFound();
+                var message = new { error = "Product brand not found" };
+                return NotFound(new JsonResult(message));
             }
 
             return View(productBrand);

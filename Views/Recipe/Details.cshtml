@@ -4,12 +4,12 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
 
 <h1>@ViewBag.RecipeTitle</h1>
+<h2>Beskrivning</h2>
 <p>@ViewBag.RecipeDescription</p>
 
-<h2>Ingredients:</h2>
+<h2>Ingredinser</h2>
 <ul>
     @foreach (var ingredient in ViewBag.Ingredients)
     {
@@ -19,6 +19,6 @@
 
 
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Redigera recept</a> |
+    <a asp-action="Index">Tillbaka till översikten</a>
 </div>

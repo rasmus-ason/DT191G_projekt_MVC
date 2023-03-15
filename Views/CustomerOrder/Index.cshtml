@@ -1,62 +1,64 @@
 @model IEnumerable<DT191G_projekt.Models.CustomerOrder>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Översikt ohanterade kundordrar";
 }
 
 <h1>Ohanterade ordrar</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Plocka Order
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OrderNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Lastname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PurchaseDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TotalPrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ShippingCost)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                <a asp-controller="DetailedOrder" asp-action="Getpackinglist" asp-route-ordernumber="@item.OrderNumber">Packlista</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OrderNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Lastname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PurchaseDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TotalPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ShippingCost)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.OrderId">Redigera order</a> |
-                <a asp-action="Details" asp-route-id="@item.OrderId">Alla detaljer</a> |
-                <a asp-action="Delete" asp-route-id="@item.OrderId">Radera/Annulera</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Plocka Order
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.OrderNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Lastname)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PurchaseDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TotalPrice)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ShippingCost)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    <a asp-controller="DetailedOrder" asp-action="Getpackinglist" asp-route-ordernumber="@item.OrderNumber">Packlista</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Lastname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PurchaseDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalPrice) kr
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShippingCost) kr
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.OrderId">Redigera order</a> |
+                    <a asp-action="Details" asp-route-id="@item.OrderId">Alla detaljer</a> |
+                    <a asp-action="Delete" asp-route-id="@item.OrderId">Radera/Annulera</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+</div>

@@ -1,7 +1,7 @@
 @model DT191G_projekt.Models.CustomerOrder
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Se orderdetaljer";
 }
 
 <h1>Orderdetaljer</h1>
@@ -67,13 +67,13 @@
             @Html.DisplayNameFor(model => model.TotalPrice)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TotalPrice)
+            @Html.DisplayFor(model => model.TotalPrice) kr
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ShippingCost)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ShippingCost)
+            @Html.DisplayFor(model => model.ShippingCost) kr
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.IsPacked)
@@ -99,7 +99,7 @@
 @* Only displays on packed orders *@
 @if(Model.IsPacked == true && Model.IsShipped == false) {
     <form asp-controller="CustomerOrder" asp-action="ChangeStatus" asp-route-ordernumber="@Model?.OrderNumber" method="post">
-        <button type="submit">Ändra order till plockad</button>
+        <button class="changeStatusBtn" type="submit">Ändra order till plockad</button>
     </form>
 }
 

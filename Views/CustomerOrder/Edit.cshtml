@@ -1,7 +1,7 @@
 @model DT191G_projekt.Models.CustomerOrder
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Redigera kundorder";
 }
 
 <h1>Redigera Order</h1>
@@ -85,6 +85,7 @@
                     </div>
                     <span asp-validation-for="IsShipped" class="text-danger"></span>
                 </div>
+                <br>
        
 
             <div class="form-group">
@@ -93,7 +94,7 @@
         </form>
     </div>
 </div>
-
+<br>
 <div>
     <a href="javascript:void(0);" onclick="goBackToPreviousPage()">Tillbaka</a>
 </div>

@@ -31,39 +31,6 @@ namespace DT191G_projekt.Controllers
                           Problem("Entity set 'ProductCategoryContext.ProductCategory'  is null.");
         }
 
-        // [HttpGet("GetAllCategories")]
-        // public async Task<IActionResult> GetAllCategories()
-        // {
-        //     var productCategories = await _context.ProductCategory.ToListAsync();
-
-        //     if (productCategories != null)
-        //     {
-        //         return Json(productCategories);
-        //     }
-        //     else
-        //     {
-        //         return Problem("Entity set 'ProductCategoryContext.ProductCategory' is null.");
-        //     }
-        // }
-
-        // // GET: ProductCategory/Details/5
-        // public async Task<IActionResult> Details(int? id)
-        // {
-        //     if (id == null || _context.ProductCategory == null)
-        //     {
-        //         return NotFound();
-        //     }
-
-        //     var productCategory = await _context.ProductCategory
-        //         .FirstOrDefaultAsync(m => m.CategoryId == id);
-        //     if (productCategory == null)
-        //     {
-        //         return NotFound();
-        //     }
-
-        //     return View(productCategory);
-        // }
-
         // GET: ProductCategory/Create
         public IActionResult Create()
         {
@@ -71,8 +38,6 @@ namespace DT191G_projekt.Controllers
         }
 
         // POST: ProductCategory/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CategoryId,CategoryName")] ProductCategory productCategory)
@@ -91,27 +56,27 @@ namespace DT191G_projekt.Controllers
         {
             if (id == null || _context.ProductCategory == null)
             {
-                return NotFound();
+                var message = new { error = "Id/Context did not exist" };
+                return NotFound(new JsonResult(message));
             }
 
             var productCategory = await _context.ProductCategory.FindAsync(id);
             if (productCategory == null)
             {
-                return NotFound();
+                var message = new { error = "Product category not found" };
+                return NotFound(new JsonResult(message));
             }
             return View(productCategory);
         }
 
         // POST: ProductCategory/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CategoryId,CategoryName")] ProductCategory productCategory)
         {
             if (id != productCategory.CategoryId)
             {
-                return NotFound();
+                var message = new { error = "Id not match" };
+                return NotFound(new JsonResult(message));
             }
 
             if (ModelState.IsValid)
@@ -125,7 +90,8 @@ namespace DT191G_projekt.Controllers
                 {
                     if (!ProductCategoryExists(productCategory.CategoryId))
                     {
-                        return NotFound();
+                        var message = new { error = "Id not exist" };
+                        return NotFound(new JsonResult(message));
                     }
                     else
                     {
@@ -142,14 +108,16 @@ namespace DT191G_projekt.Controllers
         {
             if (id == null || _context.ProductCategory == null)
             {
-                return NotFound();
+                var message = new { error = "Id/Context did not exist" };
+                return NotFound(new JsonResult(message));
             }
 
             var productCategory = await _context.ProductCategory
                 .FirstOrDefaultAsync(m => m.CategoryId == id);
             if (productCategory == null)
             {
-                return NotFound();
+                var message = new { error = "Product category not exist" };
+                return NotFound(new JsonResult(message));
             }
 
             return View(productCategory);

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DT191G_projekt.Migrations.CustomerOrder
 {
     [DbContext(typeof(CustomerOrderContext))]
-    [Migration("20230311105159_Changed req settings")]
-    partial class Changedreqsettings
+    [Migration("20230314154212_Initial Create")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,17 +55,20 @@ namespace DT191G_projekt.Migrations.CustomerOrder
                     b.Property<int>("OrderNumber")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("Phonenumber")
-                        .HasColumnType("REAL");
+                    b.Property<string>("Phonenumber")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("PurchaseDate")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("ShippingCost")
+                    b.Property<string>("ShippingCost")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("TotalPrice")
+                    b.Property<string>("TotalPrice")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ZipCode")

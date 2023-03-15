@@ -42,14 +42,16 @@ namespace DT191G_projekt.Controllers
         {
             if (id == null || _context.DetailedOrder == null)
             {
-                return NotFound();
+                var message = new { error = "Id/Context did not exist" };
+                return NotFound(new JsonResult(message));
             }
 
             var detailedOrder = await _context.DetailedOrder
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (detailedOrder == null)
             {
-                return NotFound();
+                var message = new { error = "Detailed order not found" };
+                return NotFound(new JsonResult(message));
             }
 
             return View(detailedOrder);
@@ -90,15 +92,21 @@ namespace DT191G_projekt.Controllers
                     };
                     detailedOrder.Articles.Add(article);
 
-                    //Update the stock
-                    var product = await _productContext.Product.FirstOrDefaultAsync(p => p.ArticleNumber == articleDto.ArticleNumber);
-                    if (product != null)
+                    
+                }
+
+                //Update the stock
+                foreach (var articleDto in detailedOrderbody.Articles)
+                {   
+                    var productAmountUpdate = await _productContext.Product.Where(p => p.ArticleNumber == articleDto.ArticleNumber).ToListAsync();
+                    if (productAmountUpdate.Any())
                     {
-                        product.AmountInStock -= articleDto.Amount;
+                        foreach (var product in productAmountUpdate)
+                        {
+                            product.AmountInStock -= articleDto.Amount;
+                            await _productContext.SaveChangesAsync();
+                        }
                     }
-
-                    await _productContext.SaveChangesAsync();
-
                 }
 
 
@@ -123,7 +131,8 @@ namespace DT191G_projekt.Controllers
 
             if (getOrderIdFromOrdernumber == null) 
             {
-                return NotFound();
+                var message = new { error = "Ordernumber is null - cant return packing list" };
+                return NotFound(new JsonResult(message));
             }
 
             //Extract orderId from selected row
@@ -152,20 +161,20 @@ namespace DT191G_projekt.Controllers
         {
             if (id == null || _context.DetailedOrder == null)
             {
-                return NotFound();
+                var message = new { error = "Id/Context did not exist" };
+                return NotFound(new JsonResult(message));
             }
 
             var detailedOrder = await _context.DetailedOrder.FindAsync(id);
             if (detailedOrder == null)
             {
-                return NotFound();
+                var message = new { error = "Detailed order not found" };
+                return NotFound(new JsonResult(message));
             }
             return View(detailedOrder);
         }
 
         // POST: DetailedOrder/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -173,7 +182,8 @@ namespace DT191G_projekt.Controllers
         {
             if (id != detailedOrder.Id)
             {
-                return NotFound();
+                var message = new { error = "Id did not match" };
+                return NotFound(new JsonResult(message));
             }
 
             if (ModelState.IsValid)
@@ -187,7 +197,8 @@ namespace DT191G_projekt.Controllers
                 {
                     if (!DetailedOrderExists(detailedOrder.Id))
                     {
-                        return NotFound();
+                        var message = new { error = "Id not found" };
+                        return NotFound(new JsonResult(message));
                     }
                     else
                     {
@@ -205,14 +216,16 @@ namespace DT191G_projekt.Controllers
         {
             if (id == null || _context.DetailedOrder == null)
             {
-                return NotFound();
+                var message = new { error = "Id/Context did not exist" };
+                return NotFound(new JsonResult(message));
             }
 
             var detailedOrder = await _context.DetailedOrder
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (detailedOrder == null)
             {
-                return NotFound();
+                var message = new { error = "Detailed order not found" };
+                return NotFound(new JsonResult(message));
             }
 
             return View(detailedOrder);

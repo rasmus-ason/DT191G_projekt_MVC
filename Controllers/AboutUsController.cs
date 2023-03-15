@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DT191G_projekt.Data;
 using DT191G_projekt.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DT191G_projekt.Controllers
 {
@@ -24,6 +25,7 @@ namespace DT191G_projekt.Controllers
         }
 
         // GET: AboutUs
+        [Authorize]
         public async Task<IActionResult> Index()
         {
               return _context.AboutUs != null ? 
@@ -47,32 +49,36 @@ namespace DT191G_projekt.Controllers
         }
 
         // GET: AboutUs/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.AboutUs == null)
             {
-                return NotFound();
+                var message = new { error = "Id/Context did not exist in any article" };
+                return NotFound(new JsonResult(message));
             }
 
             var aboutUs = await _context.AboutUs
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (aboutUs == null)
             {
-                return NotFound();
+                var message = new { error = "No found article" };
+                return NotFound(new JsonResult(message));
             }
 
             return View(aboutUs);
         }
 
         // GET: AboutUs/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
         }
 
         // POST: AboutUs/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost("AboutUs/Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Text,ImageFile,AltText")] AboutUs aboutUs)
@@ -116,17 +122,20 @@ namespace DT191G_projekt.Controllers
         }
 
         // GET: AboutUs/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.AboutUs == null)
             {
-                return NotFound();
+                var message = new { error = "Id/Context did not exist in any article" };
+                return NotFound(new JsonResult(message));
             }
 
             var aboutUs = await _context.AboutUs.FindAsync(id);
             if (aboutUs == null)
             {
-                return NotFound();
+                var message = new { error = "Article not found" };
+                return NotFound(new JsonResult(message));
             }
             return View(aboutUs);
         }
@@ -134,13 +143,15 @@ namespace DT191G_projekt.Controllers
         // POST: AboutUs/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Text,ImageName,ImageFile,AltText")] AboutUs aboutUs)
         {
             if (id != aboutUs.Id)
             {
-                return NotFound();
+                var message = new { error = "Id of article for editing did not exist" };
+                return NotFound(new JsonResult(message));
             }
 
             if (ModelState.IsValid)
@@ -196,11 +207,13 @@ namespace DT191G_projekt.Controllers
         }
 
         // GET: AboutUs/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.AboutUs == null)
             {
-                return NotFound();
+                var message = new { error = "Id/Context did not exist in any article" };
+                return NotFound(new JsonResult(message));
             }
 
             var aboutUs = await _context.AboutUs
@@ -214,6 +227,7 @@ namespace DT191G_projekt.Controllers
         }
 
         // POST: AboutUs/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

@@ -1,14 +1,14 @@
 @model DT191G_projekt.Models.AboutUs
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Lägg till artikel";
 }
 
 <h1>Lägg till en artikel till "Om-oss-sidan"</h1>
 
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-8">
         <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -18,7 +18,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Text" class="control-label"></label>
-                <textarea asp-for="Text" class="form-control" ></textarea>
+                <textarea cols="40" rows="20" asp-for="Text" class="form-control" ></textarea>
                 <span asp-validation-for="Text" class="text-danger"></span>
             </div>
             <div class="form-group">

@@ -30,6 +30,7 @@ namespace DT191G_projekt.Migrations.DetailedOrder
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ArticleNumber = table.Column<int>(type: "INTEGER", nullable: false),
+                    ProductTitle = table.Column<string>(type: "TEXT", nullable: false),
                     Amount = table.Column<int>(type: "INTEGER", nullable: false),
                     DetailedOrderId = table.Column<int>(type: "INTEGER", nullable: false)
                 },

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DT191G_projekt.Data;
 using DT191G_projekt.Models;
 using Microsoft.Data.Sqlite;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DT191G_projekt.Controllers
 {
@@ -24,6 +25,7 @@ namespace DT191G_projekt.Controllers
         }
 
         // GET: Recipe
+        [Authorize]
         public async Task<IActionResult> Index()
         {
               return _context.Recipe != null ? 
@@ -41,11 +43,13 @@ namespace DT191G_projekt.Controllers
 
 
         // GET: Recipe/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                var message = new { error = "Id did not exist" };
+                return NotFound(new JsonResult(message));
             }
 
             //Join ingredient and recipe tables
@@ -55,7 +59,8 @@ namespace DT191G_projekt.Controllers
 
             if (recipe == null)
             {
-                return NotFound();
+                var message = new { error = "Recipe not found" };
+                return NotFound(new JsonResult(message));
             }
 
             // Store recipe and ingredient in ViewBag
@@ -68,14 +73,14 @@ namespace DT191G_projekt.Controllers
        
 
         // GET: Recipe/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
         }
 
         // POST: Recipe/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Title,Description,Ingredients,ImageFile,AltText")] Recipe recipe)
@@ -124,11 +129,13 @@ namespace DT191G_projekt.Controllers
 
         // GET: Recipe/Edit/5
         // GET: Recipe/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                var message = new { error = "Id not found" };
+                return NotFound(new JsonResult(message));
             }
 
             //Join tables where id is id
@@ -139,7 +146,8 @@ namespace DT191G_projekt.Controllers
 
             if (recipe == null)
             {
-                return NotFound();
+                var message = new { error = "Recipe not found" };
+                return NotFound(new JsonResult(message));
             }
 
             return View(recipe);
@@ -149,13 +157,15 @@ namespace DT191G_projekt.Controllers
 
         // POST: Recipe/Edit/5
         // Send id and recipe model as prop, and ingredient as list to be able to loop through the list
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Recipe recipe, List<Ingredient> ingredients)
         {
             if (id != recipe.Id)
             {
-                return NotFound();
+                var message = new { error = "Id did not match" };
+                return NotFound(new JsonResult(message));
             }
 
             //Check the form data
@@ -189,7 +199,8 @@ namespace DT191G_projekt.Controllers
                 {
                     if (!RecipeExists(recipe.Id))
                     {
-                        return NotFound();
+                        var message = new { error = "Id did not exist" };
+                        return NotFound(new JsonResult(message));
                     }
                     else
                     {
@@ -203,24 +214,28 @@ namespace DT191G_projekt.Controllers
 
 
         // GET: Recipe/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Recipe == null)
             {
-                return NotFound();
+                var message = new { error = "Id/Context did not exist" };
+                return NotFound(new JsonResult(message));
             }
 
             var recipe = await _context.Recipe
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (recipe == null)
             {
-                return NotFound();
+                var message = new { error = "Recipe not found" };
+                return NotFound(new JsonResult(message));
             }
 
             return View(recipe);
         }
 
         // POST: Recipe/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -228,7 +243,8 @@ namespace DT191G_projekt.Controllers
             var recipe = await _context.Recipe.FindAsync(id);
             if (recipe == null)
             {
-                return NotFound();
+                var message = new { error = "Recipe not found" };
+                return NotFound(new JsonResult(message));
             }
 
             // Find ingridients
@@ -248,9 +264,6 @@ namespace DT191G_projekt.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
-
-
 
 
                 private bool RecipeExists(int id)

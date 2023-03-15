@@ -44,7 +44,7 @@ builder.Services.AddDbContext<AboutUsContext>(options =>
 );
 
 
-//https://www.youtube.com/watch?v=XTQo2s3LDW0
+//Cors
 builder.Services.AddCors(p => p.AddPolicy("corspolicy", build => {
     build.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader();
 }));

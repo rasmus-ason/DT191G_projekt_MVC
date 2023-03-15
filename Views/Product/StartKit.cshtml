@@ -1,7 +1,7 @@
 @model IEnumerable<DT191G_projekt.Models.Product>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Shoppens startkit";
 }
 
 <h1>Hantera startkittet</h1>
@@ -13,52 +13,57 @@
     Ej i startkit
 </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.AmountInStock)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                Lägg till/ta bort från startkit
-            </th>
-            <th>
-                Se produktdetaljer
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        bool isInStartkit = item.IsInStartkit ?? false;
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.AmountInStock) st
-            </td>
-            <td style=" color: white; background-color: @(isInStartkit ? "green" : "rgb(197, 132, 12)")">
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price) kr
-            </td>
-            <td class="startkitFormButtons">
-                <form asp-action="UpdateIsInStartkit" asp-route-id="@item.ProductId" method="post">
-                    <input type="submit" value="Lägg till produkt" />
-                </form>
-                <form asp-action="UpdateIsInStartkit" asp-route-id="@item.ProductId" method="post">
-                    <input type="submit" value="Ta bort produkt" />
-                </form>
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.ProductId">Se alla detaljer</a>
-            </td>
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AmountInStock)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th>
+                    Lägg till/ta bort från startkit
+                </th>
+                <th>
+                    Se alla produktdetaljer
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            bool isInStartkit = item.IsInStartkit ?? false;
+            <tr>
+                <td style="background-color: @(isInStartkit ? "green" : "rgb(197, 132, 12)")"></td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AmountInStock) st
+                </td>
+                
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price) kr
+                </td>
+                <td class="startkitFormButtons">
+                    <form asp-action="UpdateIsInStartkit" asp-route-id="@item.ProductId" method="post">
+                        <input type="submit" value="Lägg till produkt" />
+                    </form>
+                    <form asp-action="UpdateIsInStartkit" asp-route-id="@item.ProductId" method="post">
+                        <input type="submit" value="Ta bort produkt" />
+                    </form>
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.ProductId">Till produktsida</a>
+                </td>
 
-        </tr>
-}
-    </tbody>
-</table>
+            </tr>
+    }
+        </tbody>
+    </table>
+</div>

@@ -3,6 +3,7 @@ using System;
 using DT191G_projekt.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DT191G_projekt.Migrations.Product
 {
     [DbContext(typeof(ProductContext))]
-    partial class ProductContextModelSnapshot : ModelSnapshot
+    [Migration("20230314162116_Added error mess")]
+    partial class Addederrormess
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.3");
@@ -49,9 +52,9 @@ namespace DT191G_projekt.Migrations.Product
                     b.Property<bool?>("IsInStartkit")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("Price")
+                    b.Property<string>("Price")
                         .IsRequired()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ProductInfo")
                         .IsRequired()

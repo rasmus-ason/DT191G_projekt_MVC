@@ -1,13 +1,13 @@
 @model DT191G_projekt.Models.Product
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Redigera produkt";
 }
 
 <h1>Redigera produkt</h1>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-8">
         <form asp-action="Edit" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ProductId" />
@@ -31,7 +31,7 @@
             <br>
             <div class="form-group">
                 <label asp-for="ProductInfo" class="control-label"></label>
-                <textarea asp-for="ProductInfo" class="form-control"></textarea>
+                <textarea rows="10" asp-for="ProductInfo" class="form-control"></textarea>
                 <span asp-validation-for="ProductInfo" class="text-danger"></span>
             </div>
             <br>
