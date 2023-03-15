@@ -22,11 +22,9 @@ namespace DT191G_projekt.Models{
             public string? ProductTitle { get; set; }
             [Required]
             public int Amount { get; set; }
-
             // Foreign key property
             public int DetailedOrderId { get; set; }
 
-           
         }  
        
 }

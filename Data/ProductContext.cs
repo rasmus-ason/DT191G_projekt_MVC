@@ -10,7 +10,6 @@ namespace DT191G_projekt.Data {
         }
 
         public DbSet<Product> Product {get; set;}
-
-        
+   
     }
 }
