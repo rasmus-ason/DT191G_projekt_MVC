@@ -106,7 +106,7 @@ Två tabeller lagras i denna databas - recipe och ingredients. Id i recipe blir 
 | GET           | /getallrecipes | Hämtar alla recept           |
 | GET           | /getallarticles  | Hämtar alla artiklar till om-oss-sidan            |
 | POST           | /customerorder/create  | Lägger kundorder           |
-| POST           | /detailed<order/create  | Lägger detaljerad produktorder kopplat till customerorder           |
+| POST           | /detailedorder/create  | Lägger detaljerad produktorder kopplat till customerorder           |
 
 
 
