@@ -95,6 +95,18 @@ Två tabeller lagras i denna databas - recipe och ingredients. Id i recipe blir 
 * RecipeId (id från Recipe)
 
 
+## Möjliga anrop från extern källa
+
+| Metod         | Ändpunkt        | Beskrivning   
+| ------------- | -------------   | --------    |
+| GET           | /getallproducts  | Hämtar alla produkter            |
+| GET           | /getlatestproducts  | Hämtar senaste 6 produkterna            |
+| GET           | /getproductbyid/:id  | Hämtar unik produkt           |
+| GET           | /getstartkitproduct  | Hämtar alla produkter i startkit           |
+| GET           | /getallrecipes | Hämtar alla recept           |
+| GET           | /getallarticles  | Hämtar alla artiklar till om-oss-sidan            |
+| POST           | /customerorder/create  | Lägger kundorder           |
+| POST           | /detailed<order/create  | Lägger detaljerad produktorder kopplat till customerorder           |
 
 
 
