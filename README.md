@@ -65,6 +65,34 @@ Lagring av produktmärken
 * Id
 * BrandName
 
+## AboutUs
+Lagring av artiklar till webshoppens "Om Oss" - sida
+
+* Id
+* Title
+* Text
+* ImageName
+* AltText
+* ImageFile
+
+## Recipe
+Två tabeller lagras i denna databas - recipe och ingredients. Id i recipe blir fk i ingredients. 
+
+### Recipe
+* Id
+* Title
+* Description
+* ImageName
+* AltText
+* ImageFile
+* Ingredients (av typen list)
+
+### Ingredients
+* Id
+* Name
+* Quantity
+* Unit
+* RecipeId (id från Recipe)
 
 
 
